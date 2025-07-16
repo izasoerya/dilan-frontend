@@ -20,7 +20,7 @@
 <main>
   <div
     class="bg-white dark:bg-gray-800 dark:text-white
-    sticky top-0 z-[401] w-full shadow-xl
+    sticky top-0 z-[401] w-full shadow-md
     flex flex-row items-center justify-between px-10 py-4
     transition-colors duration-300
     "

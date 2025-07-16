@@ -34,7 +34,7 @@
 </script>
 
 <div
-  class="rounded-xl shadow p-4 bg-white dark:bg-gray-800 transition-colors duration-300"
+  class="rounded-xl shadow-md bg-white dark:bg-gray-800 transition-colors duration-300"
 >
   <h2 class="text-lg font-bold mb-2 dark:text-white">Node Status</h2>
 
