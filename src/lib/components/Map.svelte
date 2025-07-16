@@ -72,9 +72,9 @@
 <div
   class="rounded-xl shadow-md bg-white dark:bg-gray-800 transition-colors duration-300"
 >
-  <h2 class="text-lg font-bold mb-2 dark:text-white">Device Location</h2>
+  <h2 class="text-lg font-bold dark:text-white">Device Location</h2>
 
-  <div class="mb-4">
+  <div class="mb-2">
     <div class="flex justify-between items-center text-sm dark:text-gray-300">
       <span>Device: {tracker.esp_owner || "Unknown"}</span>
       <span class="text-xs bg-blue-100 dark:bg-blue-900 px-2 py-1 rounded">
@@ -88,7 +88,7 @@
     class="w-full h-64 rounded-lg border border-gray-200 dark:border-gray-600"
   ></div>
 
-  <div class="mt-4 text-sm dark:text-gray-300">
+  <div class="mt-2 text-sm dark:text-gray-300">
     <p class="text-gray-400 dark:text-gray-500 text-xs">
       Last Update: {tracker.updated_at
         ? new Date(tracker.updated_at).toLocaleString()
