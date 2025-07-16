@@ -49,17 +49,26 @@
     {/each}
   </select>
 
-  <div class="mt-4 text-sm dark:text-gray-300">
-    <p>Latitude: {tracker.latitude ?? "N/A"}</p>
-    <p>Longitude: {tracker.longitude ?? "N/A"}</p>
-    <p>
-      Battery: {tracker.battery}{tracker.battery !== null ? "%" : ""}
+  <div class="mt-4 text-sm dark:text-gray-300 flex flex-col gap-1.5">
+    <p class="flex justify-between">
+      <span>Latitude:</span>
+      <span>{tracker.latitude ?? "N/A"}</span>
     </p>
-    <p>
-      Still Online: <span class={onlineStatus.class}>{onlineStatus.text}</span>
+    <p class="flex justify-between">
+      <span>Longitude:</span>
+      <span>{tracker.longitude ?? "N/A"}</span>
     </p>
-    <p class="text-gray-400 dark:text-gray-500">
-      Last Update: {formatDate(tracker.updated_at)}
+    <p class="flex justify-between">
+      <span>Battery:</span>
+      <span>{tracker.battery}{tracker.battery !== null ? "%" : ""}</span>
+    </p>
+    <p class="flex justify-between">
+      <span>Still Online:</span>
+      <span class={onlineStatus.class}>{onlineStatus.text}</span>
+    </p>
+    <p class="flex justify-between text-gray-400 dark:text-gray-500">
+      <span>Last Update:</span>
+      <span>{formatDate(tracker.updated_at)}</span>
     </p>
   </div>
 </div>
