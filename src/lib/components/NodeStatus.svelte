@@ -1,9 +1,14 @@
 <script lang="ts">
+  // filepath: src/lib/components/NodeStatus.svelte
   import type { NodeProperty } from "../models/NodeProperty";
+  import { createEventDispatcher, afterUpdate } from "svelte";
 
-  export let tracker: NodeProperty;
-  let selectedTrackerId = tracker.id;
-  const availableTrackers: NodeProperty[] = [tracker];
+  export let trackers: NodeProperty[] = [];
+  export let selectedTracker: NodeProperty;
+
+  let selectedTrackerId: string;
+  const dispatch = createEventDispatcher();
+  $: selectedTrackerId = selectedTracker?.id!;
 
   function formatDate(date: Date | null): string {
     if (!date) return "Unknown";
@@ -29,8 +34,11 @@
       return { text: "Offline", class: "text-red-600 font-bold" };
     }
   }
+  $: onlineStatus = getOnlineStatus(selectedTracker?.updated_at);
 
-  $: onlineStatus = getOnlineStatus(tracker.updated_at);
+  function changeTracker(newId: string) {
+    dispatch("trackerChange", newId);
+  }
 </script>
 
 <div
@@ -40,11 +48,12 @@
 
   <select
     bind:value={selectedTrackerId}
+    on:change={() => changeTracker(selectedTrackerId)}
     class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
   >
-    {#each availableTrackers as availableTracker}
-      <option value={availableTracker.id}>
-        {availableTracker.esp_owner || "Unknown"} - {availableTracker.id}
+    {#each trackers as tracker}
+      <option value={tracker.id}>
+        {tracker.esp_owner || "Unknown"} - {tracker.id}
       </option>
     {/each}
   </select>
@@ -52,15 +61,18 @@
   <div class="mt-4 text-sm dark:text-gray-300 flex flex-col gap-1.5">
     <p class="flex justify-between">
       <span>Latitude:</span>
-      <span>{tracker.latitude ?? "N/A"}</span>
+      <span>{selectedTracker?.latitude ?? "N/A"}</span>
     </p>
     <p class="flex justify-between">
       <span>Longitude:</span>
-      <span>{tracker.longitude ?? "N/A"}</span>
+      <span>{selectedTracker?.longitude ?? "N/A"}</span>
     </p>
     <p class="flex justify-between">
       <span>Battery:</span>
-      <span>{tracker.battery}{tracker.battery !== null ? "%" : ""}</span>
+      <span>
+        {selectedTracker?.battery}
+        {selectedTracker?.battery !== null ? "%" : ""}
+      </span>
     </p>
     <p class="flex justify-between">
       <span>Still Online:</span>
@@ -68,7 +80,7 @@
     </p>
     <p class="flex justify-between text-gray-400 dark:text-gray-500">
       <span>Last Update:</span>
-      <span>{formatDate(tracker.updated_at)}</span>
+      <span>{formatDate(selectedTracker?.updated_at)}</span>
     </p>
   </div>
 </div>

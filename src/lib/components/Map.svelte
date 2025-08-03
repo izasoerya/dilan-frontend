@@ -3,7 +3,9 @@
   import type { Map as LeafletMap, Marker } from "leaflet";
   import type { NodeProperty } from "../models/NodeProperty";
 
-  export let tracker: NodeProperty;
+  export let trackers: NodeProperty[];
+  export let selectedTrackerIds: string;
+  $: selectedTracker = trackers.find((t) => t.id === selectedTrackerIds);
 
   let mapContainer: HTMLDivElement;
   let map: LeafletMap;
@@ -21,7 +23,7 @@
         "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png",
     });
     map = L.map(mapContainer, {
-      center: [tracker.latitude ?? 0, tracker.longitude ?? 0],
+      center: [selectedTracker!.latitude ?? 0, selectedTracker!.longitude ?? 0],
       zoom: 13,
       scrollWheelZoom: true,
     });
@@ -32,13 +34,19 @@
     }).addTo(map);
 
     // Add marker if coordinates are available
-    if (tracker.latitude !== null && tracker.longitude !== null) {
-      marker = L.marker([tracker.latitude, tracker.longitude]).addTo(map);
+    if (
+      selectedTracker!.latitude !== null &&
+      selectedTracker!.longitude !== null
+    ) {
+      marker = L.marker([
+        selectedTracker!.latitude,
+        selectedTracker!.longitude,
+      ]).addTo(map);
       marker.bindPopup(`
-        <b>${tracker.esp_owner || "Unknown Device"}</b><br>
-        ID: ${tracker.id}<br>
-        Battery: ${tracker.battery ?? "N/A"}%<br>
-        Last Update: ${new Date(tracker.updated_at || new Date()).toLocaleString()}
+        <b>${selectedTracker!.esp_owner || "Unknown Device"}</b><br>
+        ID: ${selectedTracker!.id}<br>
+        Battery: ${selectedTracker!.battery ?? "N/A"}%<br>
+        Last Update: ${new Date(selectedTracker!.updated_at || new Date()).toLocaleString()}
       `);
     }
   });
@@ -52,11 +60,11 @@
   $: if (
     map &&
     marker &&
-    tracker.latitude !== null &&
-    tracker.longitude !== null
+    selectedTracker!.latitude !== null &&
+    selectedTracker!.longitude !== null
   ) {
-    marker.setLatLng([tracker.latitude, tracker.longitude]);
-    map.setView([tracker.latitude, tracker.longitude], 13);
+    marker.setLatLng([selectedTracker!.latitude, selectedTracker!.longitude]);
+    map.setView([selectedTracker!.latitude, selectedTracker!.longitude], 13);
   }
 </script>
 
@@ -76,9 +84,9 @@
 
   <div class="mb-2">
     <div class="flex justify-between items-center text-sm dark:text-gray-300">
-      <span>Device: {tracker.esp_owner || "Unknown"}</span>
+      <span>Device: {selectedTracker!.esp_owner || "Unknown"}</span>
       <span class="text-xs bg-blue-100 dark:bg-blue-900 px-2 py-1 rounded">
-        ID: {tracker.id}
+        ID: {selectedTracker!.id}
       </span>
     </div>
   </div>
@@ -90,8 +98,8 @@
 
   <div class="mt-2 text-sm dark:text-gray-300">
     <p class="text-gray-400 dark:text-gray-500 text-xs">
-      Last Update: {tracker.updated_at
-        ? new Date(tracker.updated_at).toLocaleString()
+      Last Update: {selectedTracker!.updated_at
+        ? new Date(selectedTracker!.updated_at).toLocaleString()
         : "Unknown"}
     </p>
   </div>
