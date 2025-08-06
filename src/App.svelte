@@ -4,7 +4,11 @@
   import NodeStatus from "./lib/components/NodeStatus.svelte";
   import type { NodeProperty } from "./lib/models/NodeProperty";
   import Map from "./lib/components/Map.svelte";
-  import supabase from "./services/SupabaseClient";
+  import supabase, {
+    initMedicineData,
+    initNodeData,
+    subscribeToTable,
+  } from "./services/SupabaseClient";
   import { onMount } from "svelte";
   import type { MedicineProperty } from "./lib/models/MedicineProperty";
   import MedicineContainer from "./lib/components/MedicineContainer.svelte";
@@ -14,30 +18,16 @@
   let medicineData: MedicineProperty[] = [];
 
   onMount(async () => {
-    const { data: NodeData } = await supabase.from("node_prop").select();
-    nodeData = (NodeData ?? []).map((item) => ({
-      ...item,
-      created_at: item.created_at ? new Date(item.created_at) : null,
-      updated_at: item.updated_at ? new Date(item.updated_at) : null,
-    }));
+    nodeData = await initNodeData();
     selectedNodeProperty = nodeData[0];
-
-    const { data: MedicineData } = await supabase
-      .from("medicine_prop")
-      .select()
-      .eq("esp_owner", selectedNodeProperty.esp_owner);
-    const parseAlarmTime = (
-      alarmTimeObj: Record<string, boolean> | null | undefined
-    ): [string, boolean][] => {
-      return alarmTimeObj ? Object.entries(alarmTimeObj) : [];
-    };
-
-    medicineData = (MedicineData ?? []).map((item) => ({
-      ...item,
-      alarm_time: parseAlarmTime(item.alarm_time),
-      updated_at: item.updated_at ? new Date(item.updated_at) : undefined,
-    }));
   });
+  $: if (selectedNodeProperty) {
+    initMedicineData(selectedNodeProperty.esp_owner).then((data) => {
+      medicineData = data;
+    });
+  }
+
+  subscribeToTable("node_prop", (payload) => console.log(payload));
 
   function handleTrackerChange(event: CustomEvent<string>) {
     const newId = event.detail;
@@ -47,7 +37,6 @@
     }
   }
 
-  // Debug
   $: console.log("init nodeData: ", nodeData);
   $: console.log("init medicineData: ", medicineData);
   $: console.log("selectedNodeProperty changed:", selectedNodeProperty);
@@ -63,7 +52,7 @@
     <h1 class="text-2xl font-bold m-0">DILAN</h1>
     <ThemeMode />
   </div>
-  {#if nodeData[0] && medicineData[0]}
+  {#if nodeData[0]}
     <div class="card flex flex-col md:flex-row gap-5">
       <div class="md:flex-[2.3]">
         <Map
@@ -79,9 +68,11 @@
         />
       </div>
     </div>
-    <div>
-      <MedicineContainer medicine={medicineData[0]} />
-    </div>
+    <MedicineContainer
+      medicine={medicineData.find(
+        (e) => e.esp_owner == selectedNodeProperty.esp_owner
+      )}
+    />
   {:else}
     <div class="card p-8 text-center text-gray-500">Loading nodeData...</div>
   {/if}
