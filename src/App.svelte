@@ -27,7 +27,16 @@
     });
   }
 
-  subscribeToTable("node_prop", (payload) => console.log(payload));
+  subscribeToTable("node_prop", (payload) => {
+    nodeData = nodeData.map((e) =>
+      e.id == payload.new.id ? { ...e, ...payload.new } : e
+    );
+  });
+  $: if (nodeData) {
+    selectedNodeProperty = nodeData.find(
+      (e) => e.id == selectedNodeProperty.id
+    )!;
+  }
 
   function handleTrackerChange(event: CustomEvent<string>) {
     const newId = event.detail;
