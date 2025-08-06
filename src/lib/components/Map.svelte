@@ -58,13 +58,25 @@
   });
 
   $: if (
-    map &&
     marker &&
-    selectedTracker!.latitude !== null &&
-    selectedTracker!.longitude !== null
+    selectedTracker &&
+    selectedTracker.latitude !== null &&
+    selectedTracker.longitude !== null
   ) {
-    marker.setLatLng([selectedTracker!.latitude, selectedTracker!.longitude]);
-    map.setView([selectedTracker!.latitude, selectedTracker!.longitude], 13);
+    marker.setLatLng([selectedTracker.latitude, selectedTracker.longitude]);
+    map.setView([selectedTracker.latitude, selectedTracker.longitude], 13);
+
+    // Update popup content
+    marker.bindPopup(`
+      <b>${selectedTracker.esp_owner || "Unknown Device"}</b><br>
+      ID: ${selectedTracker.id}<br>
+      Battery: ${selectedTracker.battery ?? "N/A"}%<br>
+      Last Update: ${
+        selectedTracker.updated_at
+          ? new Date(selectedTracker.updated_at).toLocaleString()
+          : "Unknown"
+      }
+    `);
   }
 </script>
 
