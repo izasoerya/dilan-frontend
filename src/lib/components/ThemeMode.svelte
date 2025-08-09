@@ -36,10 +36,10 @@
   };
 </script>
 
-<button onclick={clicked}>
+<button onclick={clicked} class="bg-white dark:bg-gray-900 px-2.5 py-2.5">
   {#if lightMode}
     <svg
-      class="w-6 h-6"
+      class="w-6 h-6 items-justify-center items-center"
       aria-hidden="true"
       xmlns="http://www.w3.org/2000/svg"
       width="24"
