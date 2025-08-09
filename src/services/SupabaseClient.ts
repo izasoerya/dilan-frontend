@@ -35,7 +35,7 @@ export async function initNodeData() {
 
 export async function initMedicineData(esp_owner: string) {
   const { data: MedicineData } = await supabase
-    .from("medicine_prop_dev")
+    .from("medicine_prop")
     .select()
     .eq("esp_owner", esp_owner);
 
