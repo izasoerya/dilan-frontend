@@ -1,4 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
+import type { MedicineProperty } from "../lib/models/MedicineProperty";
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL!;
 const supabaseKey = import.meta.env.VITE_SUPABASE_KEY!;
@@ -34,18 +35,28 @@ export async function initNodeData() {
 
 export async function initMedicineData(esp_owner: string) {
   const { data: MedicineData } = await supabase
-    .from("medicine_prop")
+    .from("medicine_prop_dev")
     .select()
     .eq("esp_owner", esp_owner);
-  const parseAlarmTime = (
-    alarmTimeObj: Record<string, boolean> | null | undefined
-  ): [string, boolean][] => {
-    return alarmTimeObj ? Object.entries(alarmTimeObj) : [];
-  };
+
+  const medicineIds = (MedicineData ?? []).map((item) => item.id);
+
+  const { data: MedicineStatus } = await supabase
+    .from("medicine_status")
+    .select()
+    .in("medicine_id", medicineIds);
 
   const medicineData = (MedicineData ?? []).map((item) => ({
     ...item,
-    alarm_time: parseAlarmTime(item.alarm_time),
+    medicine_status: (MedicineStatus ?? [])
+      .filter((status) => status.medicine_id === item.id)
+      .map((status) => ({
+        ...status,
+        alarm_time:
+          typeof status.alarm_time === "string"
+            ? status.alarm_time.replace(/\s*\+\d{2}$/, "")
+            : status.alarm_time,
+      })),
     updated_at: item.updated_at ? new Date(item.updated_at) : undefined,
   }));
 
