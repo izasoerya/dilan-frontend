@@ -5,7 +5,7 @@ export interface MedicineProperty {
   name: string;
   qty: number;
   description: string;
-  medicine_status: MedicineStatus;
+  medicine_status: [MedicineStatus];
   updated_at: Date | undefined;
   user_owner: string | undefined;
   esp_owner: string | undefined;

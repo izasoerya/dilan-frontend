@@ -63,4 +63,28 @@ export async function initMedicineData(esp_owner: string) {
   return medicineData;
 }
 
+export async function createMedicineData(createdMedicine: MedicineProperty) {
+  const { data: MedicinePropData } = await supabase
+    .from("medicine_prop")
+    .insert({
+      name: createdMedicine.name,
+      description: createdMedicine.description,
+      qty: createdMedicine.qty,
+      esp_owner: createdMedicine.esp_owner,
+    })
+    .select()
+    .single();
+
+  // Insert one medicine_status row for each alarm time
+  if (MedicinePropData && Array.isArray(createdMedicine.medicine_status)) {
+    const statusRows = createdMedicine.medicine_status.map((status) => ({
+      medicine_id: MedicinePropData.id,
+      alarm_time: status.alarm_time,
+      is_taken: false,
+    }));
+
+    await supabase.from("medicine_status").insert(statusRows);
+  }
+}
+
 export default supabase;

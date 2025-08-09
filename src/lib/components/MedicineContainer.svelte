@@ -5,12 +5,12 @@
   $: statuses = Array.isArray(medicine?.medicine_status)
     ? medicine.medicine_status
     : [];
-  $: console.log(`statuses: ${medicine?.medicine_status}`);
+  $: console.log("statuses:", statuses);
 </script>
 
 {#if medicine}
   <div
-    class="rounded-xl bg-white dark:bg-gray-800 shadow-md p-4
+    class="rounded-xl bg-white dark:bg-gray-800 shadow-md px-4 py-2
     flex flex-col
     relative transition-colors duration-300 mx-6"
   >

@@ -5,6 +5,7 @@
   import type { NodeProperty } from "./lib/models/NodeProperty";
   import Map from "./lib/components/Map.svelte";
   import supabase, {
+    createMedicineData,
     initMedicineData,
     initNodeData,
     subscribeToTable,
@@ -12,6 +13,8 @@
   import { onMount } from "svelte";
   import type { MedicineProperty } from "./lib/models/MedicineProperty";
   import MedicineContainer from "./lib/components/MedicineContainer.svelte";
+  import ButtonMedicine from "./lib/components/ButtonMedicine.svelte";
+  import type { MedicineStatus } from "./lib/models/MedicineStatus";
 
   let nodeData: NodeProperty[] = [];
   let selectedNodeProperty: NodeProperty;
@@ -46,6 +49,28 @@
     }
   }
 
+  function handleSubmitMedicine(event: CustomEvent<any>) {
+    const newMedicine = event.detail;
+    const medicine_status: MedicineStatus = (newMedicine.times ?? []).map(
+      (t: string) => ({
+        id: undefined,
+        medicine_id: "", // will be set by backend after insert
+        alarm_time: t, // convert to number if needed: Number(t)
+        is_taken: false, // or false if your DB expects boolean
+        updated_at: undefined,
+      })
+    );
+
+    const parsedMedicine: MedicineProperty = {
+      ...newMedicine,
+      medicine_status,
+      esp_owner: selectedNodeProperty.esp_owner,
+      id: undefined,
+      updated_at: undefined,
+    };
+    createMedicineData(parsedMedicine);
+  }
+
   $: console.log("init nodeData: ", nodeData);
   $: console.log("init medicineData: ", medicineData);
   $: console.log("selectedNodeProperty changed:", selectedNodeProperty);
@@ -69,19 +94,22 @@
           selectedTrackerIds={selectedNodeProperty.id!}
         />
       </div>
-      <div class="md:flex-1">
+      <div class="md:flex-1 flex-col">
         <NodeStatus
           trackers={nodeData}
           selectedTracker={selectedNodeProperty}
           on:trackerChange={handleTrackerChange}
         />
+        <div class="mt-4">
+          <ButtonMedicine on:add={handleSubmitMedicine} />
+        </div>
       </div>
     </div>
-    <MedicineContainer
-      medicine={medicineData.find(
-        (e) => e.esp_owner == selectedNodeProperty.esp_owner
-      )}
-    />
+    {#each medicineData.filter((e) => e.esp_owner == selectedNodeProperty.esp_owner) as medicine}
+      <div class="py-1.5">
+        <MedicineContainer {medicine} />
+      </div>
+    {/each}
   {:else}
     <div class="card p-8 text-center text-gray-500">Loading nodeData...</div>
   {/if}
