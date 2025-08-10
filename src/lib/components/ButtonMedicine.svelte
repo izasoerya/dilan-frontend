@@ -59,7 +59,7 @@
       ...formData,
       times: finalTimes,
     });
-
+    location.reload();
     closeModal();
   }
 
