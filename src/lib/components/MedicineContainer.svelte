@@ -2,12 +2,15 @@
   import type { MedicineProperty } from "../models/MedicineProperty";
 
   export let medicine: MedicineProperty | undefined;
-  $: alarmTimes = medicine?.alarm_time ?? [];
+  $: statuses = Array.isArray(medicine?.medicine_status)
+    ? medicine.medicine_status
+    : [];
+  $: console.log("statuses:", statuses);
 </script>
 
 {#if medicine}
   <div
-    class="rounded-xl bg-white dark:bg-gray-800 shadow-md p-4
+    class="rounded-xl bg-white dark:bg-gray-800 shadow-md px-4 py-2
     flex flex-col
     relative transition-colors duration-300 mx-6"
   >
@@ -27,13 +30,13 @@
       </div>
     </div>
     <div class="mt-2 flex gap-2 text-sm">
-      {#each alarmTimes as [time, taken], i}
+      {#each statuses as status, i}
         <span
-          class={i === 0
+          class={status.is_taken
             ? "text-green-600 dark:text-green-400"
             : "text-red-600 dark:text-red-400"}
         >
-          {time}
+          {status.alarm_time}
         </span>
       {/each}
     </div>
