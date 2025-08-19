@@ -90,4 +90,11 @@ export async function createMedicineData(createdMedicine: MedicineProperty) {
   location.reload();
 }
 
+export async function deleteMedicineCascade(medicineId: string) {
+  await supabase.from("medicine_status").delete().eq("medicine_id", medicineId);
+
+  await supabase.from("medicine_prop").delete().eq("id", medicineId);
+  location.reload();
+}
+
 export default supabase;
