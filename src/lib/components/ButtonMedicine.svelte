@@ -22,7 +22,7 @@
     return {
       name: "",
       qty: 1,
-      category: "day",
+      category: "tablet",
       description: "",
       times: ["08:00"],
     };
@@ -59,7 +59,6 @@
       ...formData,
       times: finalTimes,
     });
-    location.reload();
     closeModal();
   }
 
@@ -185,8 +184,8 @@
               bind:value={formData.category}
               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:text-white"
             >
-              <option value="day">Per Day</option>
-              <option value="week">Per Week</option>
+              <option value="mg">Miligram</option>
+              <option value="Tablet">Tablet</option>
             </select>
           </div>
 
