@@ -6,6 +6,7 @@
   import Map from "./lib/components/Map.svelte";
   import supabase, {
     createMedicineData,
+    deleteMedicineCascade,
     initMedicineData,
     initNodeData,
     subscribeToTable,
@@ -71,6 +72,11 @@
     createMedicineData(parsedMedicine);
   }
 
+  function handleDeleteMedicine(event: CustomEvent<any>) {
+    const uidMedicine = event.detail;
+    deleteMedicineCascade(uidMedicine);
+  }
+
   $: console.log("init nodeData: ", nodeData);
   $: console.log("init medicineData: ", medicineData);
   $: console.log("selectedNodeProperty changed:", selectedNodeProperty);
@@ -107,7 +113,7 @@
     </div>
     {#each medicineData.filter((e) => e.esp_owner == selectedNodeProperty.esp_owner) as medicine}
       <div class="py-1.5">
-        <MedicineContainer {medicine} />
+        <MedicineContainer on:delete={handleDeleteMedicine} {medicine} />
       </div>
     {/each}
   {:else}
