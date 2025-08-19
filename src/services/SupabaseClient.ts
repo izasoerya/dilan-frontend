@@ -68,12 +68,14 @@ export async function createMedicineData(createdMedicine: MedicineProperty) {
     .from("medicine_prop")
     .insert({
       name: createdMedicine.name,
+      category: createdMedicine.category,
       description: createdMedicine.description,
       qty: createdMedicine.qty,
       esp_owner: createdMedicine.esp_owner,
     })
     .select()
     .single();
+  console.log(MedicinePropData);
 
   // Insert one medicine_status row for each alarm time
   if (MedicinePropData && Array.isArray(createdMedicine.medicine_status)) {
@@ -85,6 +87,7 @@ export async function createMedicineData(createdMedicine: MedicineProperty) {
 
     await supabase.from("medicine_status").insert(statusRows);
   }
+  location.reload();
 }
 
 export default supabase;
