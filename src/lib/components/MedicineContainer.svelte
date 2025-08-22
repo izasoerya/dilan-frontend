@@ -33,18 +33,20 @@
     relative transition-colors duration-300 mx-6"
   >
     <div class="flex justify-between items-start">
-      <div>
-        <div class="font-semibold dark:text-white">
+      <div class="min-w-0">
+        <div class="font-semibold dark:text-white truncate">
           {medicine.qty} Tablet | {medicine.name}
         </div>
-        <div class="text-sm text-gray-700 dark:text-gray-300 mt-0.5">
+        <div class="text-sm text-gray-700 dark:text-gray-300 mt-0.5 truncate">
           {medicine.description}
         </div>
       </div>
-      <div class="flex items-center gap-2 absolute top-4 right-4">
-        <span class="text-green-700 dark:text-green-400 text-sm font-medium"
-          >{medicine.esp_owner}</span
+      <div class="flex items-center gap-2 min-w-0 md:text-truncuate">
+        <span
+          class="text-green-700 dark:text-green-400 text-sm font-medium truncate max-w-[300px]"
         >
+          {medicine.esp_owner}
+        </span>
         <div class="relative">
           <button
             class="p-1 rounded-full bg-white dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-700"
