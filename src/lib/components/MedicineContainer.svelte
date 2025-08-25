@@ -35,7 +35,8 @@
     <div class="flex justify-between items-start">
       <div class="min-w-0">
         <div class="font-semibold dark:text-white truncate">
-          {medicine.qty} Tablet | {medicine.name}
+          {medicine.qty}
+          {medicine.category} | {medicine.name}
         </div>
         <div class="text-sm text-gray-700 dark:text-gray-300 mt-0.5 truncate">
           {medicine.description}
