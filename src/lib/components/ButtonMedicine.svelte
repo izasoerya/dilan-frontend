@@ -188,7 +188,7 @@
             />
           </div>
 
-          <div class="col-span-2">
+          <!-- <div class="col-span-2">
             <label
               for="description"
               class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -201,7 +201,7 @@
               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:text-white"
               placeholder="e.g., Take after meals"
             ></textarea>
-          </div>
+          </div> -->
           <div class="col-span-2">
             <label
               for="time-0"
